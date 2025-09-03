@@ -1,0 +1,207 @@
+     :root {
+         --pink: #ec4899;
+         --bg: #f9fafb;
+     }
+
+     * {
+         box-sizing: border-box;
+     }
+
+     body {
+         margin: 0;
+         background: var(--bg);
+         font-family: ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica,
+             Arial, "Apple Color Emoji", "Segoe UI Emoji";
+     }
+
+     /* Layered canvases (behind UI) */
+     #starsCanvas,
+     #particlesCanvas,
+     #fireworksCanvas {
+         position: fixed;
+         inset: 0;
+         width: 100vw;
+         height: 100vh;
+         display: block;
+     }
+
+     #starsCanvas {
+         z-index: 0;
+     }
+
+     #particlesCanvas {
+         z-index: 1;
+         pointer-events: none;
+     }
+
+     #fireworksCanvas {
+         z-index: 10000;
+         pointer-events: none;
+     }
+
+     /* App container above canvases */
+     #app {
+         position: relative;
+         z-index: 2;
+     }
+
+     .card {
+         background: #fff;
+         border-radius: 16px;
+         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+         padding: 24px;
+     }
+
+     .btn {
+         cursor: pointer;
+         border: 0;
+         border-radius: 10px;
+         padding: 10px 14px;
+         font-weight: 600;
+     }
+
+     .btn-primary {
+         background: var(--pink);
+         color: #fff;
+     }
+
+     .btn-ghost {
+         background: #ffe4ed;
+         color: #9f1239;
+     }
+
+     .btn-outline {
+         background: #fff;
+         border: 2px solid #e5e7eb;
+     }
+
+     .grid {
+         display: grid;
+         gap: 16px;
+     }
+
+     @media (min-width: 900px) {
+         .grid-cols-3 {
+             grid-template-columns: 1fr 1fr 1fr;
+         }
+     }
+
+     /* Progress bar */
+     .progress {
+         height: 8px;
+         background: #e5e7eb;
+         border-radius: 999px;
+         overflow: hidden;
+     }
+
+     .progress>.bar {
+         height: 100%;
+         background: var(--pink);
+         width: 0%;
+     }
+
+     /* Map */
+     #map {
+         width: 100%;
+         height: 420px;
+         border-radius: 12px;
+     }
+
+     /* Quote */
+     .quote {
+         font-style: italic;
+         color: #9f1239;
+     }
+
+     /* Timeline */
+     .timeline {
+         position: relative;
+         padding-left: 24px;
+     }
+
+     .timeline::before {
+         content: "";
+         position: absolute;
+         left: 10px;
+         top: 0;
+         bottom: 0;
+         width: 2px;
+         background: #e5e7eb;
+     }
+
+     .timeline-item {
+         position: relative;
+         margin: 14px 0;
+         cursor: pointer;
+     }
+
+     .timeline-item::before {
+         content: "";
+         position: absolute;
+         left: -2px;
+         top: 6px;
+         width: 10px;
+         height: 10px;
+         border-radius: 50%;
+         background: var(--pink);
+     }
+
+     .timeline-item h4 {
+         margin: 0 0 4px 0;
+     }
+
+     .timeline-item p {
+         margin: 0;
+         color: #6b7280;
+     }
+
+     /* Overlay for timeline photos */
+     /* overlay par défaut : derrière l'app, non cliquable */
+     .overlay {
+         position: fixed;
+         inset: 0;
+         background: rgba(0, 0, 0, 0.85);
+         display: flex;
+         align-items: center;
+         justify-content: center;
+
+         /* NOTE : doit être inférieur à #app (si #app { z-index: 2 }) */
+         z-index: 1;
+
+         opacity: 0;
+         pointer-events: none;
+         /* laisse les clics passer aux éléments au-dessus */
+         transition: opacity 0.4s ease;
+     }
+
+     /* quand visible on ne change PAS le z-index ici (JS le fait),
+   on active juste l'opacité et les pointer-events */
+     .overlay.visible {
+         opacity: 1;
+         pointer-events: auto;
+     }
+
+     /* image à l'intérieur */
+     .overlay img {
+         max-width: 90%;
+         max-height: 90%;
+         border-radius: 12px;
+         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+         transition: opacity 0.4s ease, transform 0.4s ease;
+         transform: translateY(0);
+     }
+
+     /* Minor helpers */
+     .muted {
+         color: #6b7280;
+     }
+
+     .row {
+         display: flex;
+         gap: 8px;
+         flex-wrap: wrap;
+     }
+
+     .space-y>*+* {
+         margin-top: 12px;
+     }
