@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-gray-50">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Compteur d'amour — version ++</title>
+
+    <!-- Leaflet -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+
+    <!-- Luxon -->
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+
+    <script type="module" crossorigin src="/assets/index-Dp1c6GGN.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CepgJ-Vw.css">
+  </head>
+  <body>
+    <!-- Background canvases -->
+    <canvas id="starsCanvas"></canvas>
+    <canvas id="particlesCanvas"></canvas>
+    <canvas id="fireworksCanvas"></canvas>
+
+    <div
+      id="app"
+      class="min-h-screen"
+      style="
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      "
+    >
+      <header
+        class="card"
+        style="max-width: 980px; width: 100%; text-align: center"
+      >
+        <h1
+          style="
+            font-size: 40px;
+            margin: 0;
+            color: var(--pink);
+            font-weight: 800;
+          "
+        >
+          Notre prochain rendez-vous 💞
+        </h1>
+        <p class="muted" style="margin: 6px 0 0 0">
+          Le 20 décembre 2025 à 16:00 (heure du lieu de retrouvailles au Canada)
+        </p>
+      </header>
+
+      <section class="grid grid-cols-3" style="max-width: 980px; width: 100%">
+        <div
+          class="card"
+          style="
+            grid-column: span 2 / span 2;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+          "
+        >
+          <div class="row muted" style="align-items: center">
+            <div
+              style="
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: var(--pink);
+                animation: pulse 1.2s infinite;
+              "
+            ></div>
+            <small>Compteur en direct</small>
+          </div>
+          <div
+            id="countdown"
+            style="font-size: 30px; font-weight: 700; text-align: center"
+          ></div>
+          <div class="progress"><div id="progress" class="bar"></div></div>
+          <small
+            id="progressLabel"
+            class="muted"
+            style="text-align: center"
+          ></small>
+          <p id="loveMessage" class="quote" style="text-align: center"></p>
+
+          <div class="row" style="justify-content: center; margin-top: 6px">
+            <button id="toggleHearts" class="btn btn-primary">
+              Pluie: cœurs ON/OFF
+            </button>
+            <select id="particleMode" class="btn btn-outline">
+              <option value="hearts">Cœurs</option>
+              <option value="snow">Neige</option>
+              <option value="petals">Pétales</option>
+            </select>
+            <button id="showOverlayPhotos" class="btn btn-ghost">
+              surprise
+            </button>
+          </div>
+
+          <div class="card" style="margin-top: 8px">
+            <div class="row" style="justify-content: space-between">
+              <div>
+                <div class="muted">Distance réelle Lausanne ↔ Québec</div>
+                <div
+                  id="realDistance"
+                  style="font-weight: 700; font-size: 18px"
+                >
+                  —
+                </div>
+              </div>
+              <div>
+                <div class="muted">Distance symbolique restante</div>
+                <div
+                  id="symbolicDistance"
+                  style="font-weight: 700; font-size: 18px"
+                >
+                  —
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin: 0 0 8px 0">Heures locales</h3>
+          <div class="space-y">
+            <div
+              style="background: #f3f4f6; border-radius: 10px; padding: 10px"
+            >
+              <div class="muted">Lausanne (Europe/Zurich)</div>
+              <div id="lausanneTime" style="font-weight: 600"></div>
+            </div>
+            <div
+              style="background: #f3f4f6; border-radius: 10px; padding: 10px"
+            >
+              <div class="muted">Québec (America/Toronto)</div>
+              <div id="quebecTime" style="font-weight: 600"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" style="max-width: 980px; width: 100%">
+        <h3 style="margin-top: 0">Notre carte</h3>
+        <div id="map"></div>
+        <small class="muted">✈️ Avion animé entre Lausanne et Québec</small>
+      </section>
+
+      <section class="card" style="max-width: 980px; width: 100%">
+        <h3 style="margin-top: 0">Citation romantique du jour</h3>
+        <div id="dailyQuote" class="quote"></div>
+      </section>
+
+      
+
+      <section class="card" style="max-width: 980px; width: 100%">
+        <h3 style="margin: 0 0 8px 0">Notre playlist</h3>
+        <!-- Remplace le src par ta playlist -->
+        <iframe
+          data-testid="embed-iframe"
+          style="border-radius: 12px"
+          src="https://open.spotify.com/embed/playlist/0TRfPsekvsidaFxz9usAN8?utm_source=generator"
+          width="100%"
+          height="352"
+          frameborder="0"
+          allowfullscreen=""
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+        ></iframe>
+      </section>
+
+      <footer class="muted" style="margin: 24px 0">❤️</footer>
+    </div>
+  </body>
+</html>
